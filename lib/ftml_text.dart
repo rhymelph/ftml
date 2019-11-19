@@ -7,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'ftml_text_base.dart';
 import 'ftml_text_builder.dart';
 import 'span/ftml_text_span.dart';
-
 class FtmlText extends StatelessWidget {
   final GestureDetector onTap;
 

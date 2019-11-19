@@ -29,11 +29,16 @@ abstract class FtmlTextBase {
   }) : _content = StringBuffer();
 
   bool isStart(String value) {
-    Map<int, String> tagsMap = tags.asMap();
-    for (MapEntry<int, String> tag in tagsMap.entries) {
-      if (value.endsWith('<${tag.value}')) {
-        tagIndex = tag.key;
-        return true;
+    if(tags.length==1){
+      String tag=tags[tagIndex];
+      return value.endsWith('<$tag');
+    }else{
+      Map<int, String> tagsMap = tags.asMap();
+      for (MapEntry<int, String> tag in tagsMap.entries) {
+        if (value.endsWith('<${tag.value}')) {
+          tagIndex = tag.key;
+          return true;
+        }
       }
     }
     return false;

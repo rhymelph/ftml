@@ -35,16 +35,16 @@ abstract class FtmlTextBuilder {
   TextSpan build(String data, {TextStyle textStyle, FtmlTextTapCalBack onTap}) {
     if (data == null) return null;
     List<InlineSpan> inlineList = [];
-
+    //数据长度
     if (data.length > 0) {
       FtmlTextBase ftmlText;
       StringBuffer textStack = StringBuffer();
       int level = 0; //防止多个相同标签嵌套
 
-      for (int i = 0; i < data.length; i++) {
-        int chat = data.codeUnitAt(i);
+      int i =0;
+      for(Iterator<int> it=data.codeUnits.iterator;it.moveNext();){
+        int chat = it.current;
         textStack.writeCharCode(chat);
-
         if (ftmlText != null) {
           //判断当前是否为空，进行添加
           if (!ftmlText.isEnd(textStack.toString())) {
@@ -79,6 +79,7 @@ abstract class FtmlTextBuilder {
             textStack.clear();
           }
         }
+        i++;
       }
 
       if (ftmlText != null) {
