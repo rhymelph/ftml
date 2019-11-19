@@ -20,7 +20,7 @@ abstract class FtmlTextBase {
 
   String get startTag => '<${tags[tagIndex]}';
 
-  String get endTag => '</${tags[tagIndex]}>';
+  String get endTag => tags[tagIndex]=='img'?'>':'</${tags[tagIndex]}>';
 
   FtmlTextBase(
     this.tags,
@@ -80,60 +80,33 @@ abstract class FtmlTextBase {
   //属性
   LinkedHashMap<dynamic, String> get attributes => element.attributes;
 
-  Color get color {
-    return getColorValue(attributes['color']);
-  }
+  Color get color => getColorValue(attributes['color']);
 
-  Color get textColor {
-    return getColorValue(attributes['textcolor']);
-  }
+  //文本样式
+  Color get fontColor => getColorValue(attributes['font-color']);
 
-  //获取颜色
-  Color getColorValue(String value) {
-    if (value == null) return null;
-    if (value.contains('#')) {
-      if (value.length == 7) {
-        value = value.replaceAll('#', '0xFF');
-      } else {
-        value = value.replaceAll('#', '0x');
-      }
-    }
-    if (value.contains('0x') && value.length == 9) {
-      value = value.replaceAll('0x', '0xFF');
-    }
-    print(value);
-    int intValue = int.parse(value, onError: (e) => null);
-    print(intValue);
-    if (intValue == null) return null;
-    return Color(intValue);
-  }
+  double get fontSize => getDoubleValue(attributes['font-size'], 24);
+
+  ///[w100, w200, w300, w400, w500, w600, w700, w800, w900]
+  int get fontWeight => getIntValue(attributes['font-weight'], 3);
 
   /// padding
   double get paddingLeft =>
-      double.parse(element.attributes['paddingleft'] ?? 'null', (e) => null) ??
-      padding.elementAt(0);
+      getDoubleValue(element.attributes['paddingleft']) ?? padding.elementAt(0);
 
   double get paddingTop =>
-      double.parse(element.attributes['paddingtop'] ?? 'null', (e) => null) ??
-      padding.elementAt(1);
+      getDoubleValue(element.attributes['paddingtop']) ?? padding.elementAt(1);
 
   double get paddingRight =>
-      double.parse(element.attributes['paddingright'] ?? 'null', (e) => null) ??
+      getDoubleValue(element.attributes['paddingright']) ??
       padding.elementAt(2);
 
   double get paddingBottom =>
-      double.parse(
-          element.attributes['paddingbottom'] ?? 'null', (e) => null) ??
+      getDoubleValue(element.attributes['paddingbottom']) ??
       padding.elementAt(3);
 
   List<double> get padding {
-    if (element.attributes['padding'] == null)
-      return List.generate(4, (_) => 0.0);
-
-    List<double> result = element.attributes['padding']
-        .split(',')
-        .map((s) => double.parse(s, (s) => 0.0))
-        .toList();
+    List<double> result=getListDoubleValue(element.attributes['padding'], [0.0, 0.0, 0.0, 0.0]);
     if (result.length < 4) {
       result.addAll(List.generate(4 - result.length, (int index) => 0.0));
     }
@@ -142,29 +115,19 @@ abstract class FtmlTextBase {
 
   /// margin
   double get marginLeft =>
-      double.parse(element.attributes['marginleft'] ?? '0', (e) => null) ??
-      margin.elementAt(0);
+      getDoubleValue(element.attributes['marginleft']) ?? margin.elementAt(0);
 
   double get marginTop =>
-      double.parse(element.attributes['margintop'] ?? '0', (e) => null) ??
-      margin.elementAt(1);
+      getDoubleValue(element.attributes['margintop']) ?? margin.elementAt(1);
 
   double get marginRight =>
-      double.parse(element.attributes['marginright'] ?? '0', (e) => null) ??
-      margin.elementAt(2);
+      getDoubleValue(element.attributes['marginright']) ?? margin.elementAt(2);
 
   double get marginBottom =>
-      double.parse(element.attributes['marginbottom'] ?? '0', (e) => null) ??
-      margin.elementAt(3);
+      getDoubleValue(element.attributes['marginbottom']) ?? margin.elementAt(3);
 
   List<double> get margin {
-    if (element.attributes['margin'] == null)
-      return List.generate(4, (_) => 0.0);
-
-    List<double> result = element.attributes['margin']
-        .split(',')
-        .map((s) => double.parse(s, (s) => 0.0))
-        .toList();
+    List<double> result=getListDoubleValue(element.attributes['margin'], [0.0, 0.0, 0.0, 0.0]);
     if (result.length < 4) {
       result.addAll(List.generate(4 - result.length, (int index) => 0.0));
     }
@@ -174,5 +137,45 @@ abstract class FtmlTextBase {
   @override
   String toString() {
     return '$startTag$content$endTag';
+  }
+
+  //获取颜色
+  Color getColorValue(String value) {
+    if (value == null) return null;
+    if (value.startsWith('#')) {
+      if (value.length == 7) {
+        value = value.replaceAll('#', '0xFF');
+      } else {
+        value = value.replaceAll('#', '0x');
+      }
+    }
+    if (value.startsWith('0x') && value.length == 8) {
+      value = value.replaceAll('0x', '0xFF');
+    }
+    int intValue = int.parse(value, onError: (e) => null);
+    if (intValue == null) return null;
+    return Color(intValue);
+  }
+
+  //获取double值
+  double getDoubleValue(String value, [double def]) {
+    if (value == null) return def;
+    return double.parse(value ?? 'null', (e) => def);
+  }
+
+  //获取int值
+  int getIntValue(String value, [int def]) {
+    if (value == null) return def;
+    return int.parse(value ?? 'null', onError: (e) => def);
+  }
+
+  List<String> getListStringValue(String value, [List<String> def]) {
+    if (value == null) return def;
+    return value.split(',');
+  }
+
+  List<double> getListDoubleValue(String value, [List<double> def]) {
+    if (value == null) return def;
+    return value.split(',').map((s) => getDoubleValue(s)).toList();
   }
 }

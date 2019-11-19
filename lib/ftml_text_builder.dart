@@ -39,7 +39,6 @@ abstract class FtmlTextBuilder {
     if (data.length > 0) {
       FtmlTextBase ftmlText;
       StringBuffer textStack = StringBuffer();
-
       int level = 0; //防止多个相同标签嵌套
 
       for (int i = 0; i < data.length; i++) {

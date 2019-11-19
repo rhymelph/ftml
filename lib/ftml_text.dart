@@ -94,11 +94,14 @@ class FtmlText extends StatelessWidget {
       effectiveTextStyle = effectiveTextStyle
           .merge(const TextStyle(fontWeight: FontWeight.bold));
     }
-    DateTime time = DateTime.now();
-    TextSpan innerTextSpan = ftmlTextBuilder?.build(data,
-        textStyle: effectiveTextStyle, onTap: onFtmlTextTap);
-    Duration duration = DateTime.now().difference(time);
-    print('总耗时:${duration.inMilliseconds}毫秒');
+    TextSpan innerTextSpan;
+    if(data!=null&&data.isNotEmpty){
+      DateTime time = DateTime.now();
+      innerTextSpan = ftmlTextBuilder?.build(data,
+          textStyle: effectiveTextStyle, onTap: onFtmlTextTap);
+      Duration duration = DateTime.now().difference(time);
+      print('总耗时:${duration.inMilliseconds}毫秒');
+    }
     if (innerTextSpan == null) {
       innerTextSpan = TextSpan(
         style: effectiveTextStyle,
