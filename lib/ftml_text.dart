@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'ftml_text_base.dart';
 import 'ftml_text_builder.dart';
 import 'span/ftml_text_span.dart';
-class FtmlText extends StatelessWidget {
+class FtmlText extends StatefulWidget {
   final GestureDetector onTap;
 
   final String data;
@@ -42,43 +42,82 @@ class FtmlText extends StatelessWidget {
 
   const FtmlText(this.data,
       {Key key,
-      this.onTap,
-      this.ftmlTextBuilder,
-      this.onFtmlTextTap,
-      this.style,
-      this.strutStyle,
-      this.textAlign,
-      this.textDirection,
-      this.locale,
-      this.softWrap,
-      this.overflow,
-      this.textScaleFactor,
-      this.maxLines,
-      this.semanticsLabel,
-      this.textWidthBasis})
+        this.onTap,
+        this.ftmlTextBuilder,
+        this.onFtmlTextTap,
+        this.style,
+        this.strutStyle,
+        this.textAlign,
+        this.textDirection,
+        this.locale,
+        this.softWrap,
+        this.overflow,
+        this.textScaleFactor,
+        this.maxLines,
+        this.semanticsLabel,
+        this.textWidthBasis})
       : assert(data != null),
         textSpan = null,
         super(key: key);
 
   const FtmlText.rich(this.textSpan,
       {Key key,
-      this.onTap,
-      this.onFtmlTextTap,
-      this.style,
-      this.strutStyle,
-      this.textAlign,
-      this.textDirection,
-      this.locale,
-      this.softWrap,
-      this.overflow,
-      this.textScaleFactor,
-      this.maxLines,
-      this.semanticsLabel,
-      this.textWidthBasis})
+        this.onTap,
+        this.onFtmlTextTap,
+        this.style,
+        this.strutStyle,
+        this.textAlign,
+        this.textDirection,
+        this.locale,
+        this.softWrap,
+        this.overflow,
+        this.textScaleFactor,
+        this.maxLines,
+        this.semanticsLabel,
+        this.textWidthBasis})
       : assert(textSpan != null),
         data = null,
         ftmlTextBuilder = null,
         super(key: key);
+
+  @override
+  _FtmlTextState createState() => _FtmlTextState();
+}
+
+class _FtmlTextState extends State<FtmlText> {
+   GestureDetector get onTap=>widget.onTap;
+
+   String get data=>widget.data;
+
+   FtmlTextBuilder get ftmlTextBuilder=>widget.ftmlTextBuilder;
+
+   FtmlTextTapCalBack get onFtmlTextTap =>widget.onFtmlTextTap;
+
+   InlineSpan get textSpan=>widget.textSpan;
+
+   TextStyle get style=>widget.style;
+
+   StrutStyle get strutStyle=>widget.strutStyle;
+
+   TextAlign get textAlign=>widget.textAlign;
+
+   TextDirection get textDirection=>widget.textDirection;
+
+   Locale get locale=>widget.locale;
+
+   bool get softWrap=>widget.softWrap;
+
+   TextOverflow get overflow=>widget.overflow;
+
+   double get textScaleFactor=>widget.textScaleFactor;
+
+   int get maxLines=>widget.maxLines;
+
+   String get semanticsLabel=>widget.semanticsLabel;
+
+   TextWidthBasis get textWidthBasis=>widget.textWidthBasis;
+
+   TextSpan innerTextSpan;
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +132,7 @@ class FtmlText extends StatelessWidget {
       effectiveTextStyle = effectiveTextStyle
           .merge(const TextStyle(fontWeight: FontWeight.bold));
     }
-    TextSpan innerTextSpan;
-    if(data!=null&&data.isNotEmpty){
+    if(innerTextSpan==null&&data!=null&&data.isNotEmpty){
       DateTime time = DateTime.now();
       innerTextSpan = ftmlTextBuilder?.build(data,
           textStyle: effectiveTextStyle, onTap: onFtmlTextTap);
@@ -132,6 +170,7 @@ class FtmlText extends StatelessWidget {
     return result;
   }
 }
+
 
 class FtmlRichText extends MultiChildRenderObjectWidget {
   final InlineSpan text;

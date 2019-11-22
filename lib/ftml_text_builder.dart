@@ -42,7 +42,8 @@ abstract class FtmlTextBuilder {
       int level = 0; //防止多个相同标签嵌套
 
       int i =0;
-      for(Iterator<int> it=data.codeUnits.iterator;it.moveNext();){
+      Iterator<int> it=data.codeUnits.iterator;
+      while(it.moveNext()){
         int chat = it.current;
         textStack.writeCharCode(chat);
         if (ftmlText != null) {
